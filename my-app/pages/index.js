@@ -252,14 +252,12 @@ export default function Home() {
         return(
             <div style={ {display: "flex-col"} }>
                 <div>
-                    <input 
-                    type="number" placeholder="Amount of Tokens"
+                    <input type="number" placeholder="Amount of Tokens"
                     onChange={ (e) => setTokenAmount(BigNumber.from(e.target.vallue))}
                     className={styles.input} />
                 </div>
 
-                <button className={styles.button}
-                disable={ !(tokenAmount > 0)}
+                <button className={styles.button} disable={ !(tokenAmount > 0)}
                 onClick={ () => mintCryptoDevToken(tokenAmount)}>Mint tokens</button>
             </div>
         );
@@ -275,23 +273,26 @@ export default function Home() {
 
         <div className={styles.main}>
             <div>
-            <h1 className={styles.title}>Welcome to Crypto Devs ICO!</h1>
+                <h1 className={styles.title}>Welcome to Crypto Devs ICO!</h1>
+                <div className={styles.description}>
+                    You can claim or mint Crypto Dev tokens here
+                </div>
+                {walletConnected ? (
+            <div>
+
             <div className={styles.description}>
-                You can claim or mint Crypto Dev tokens here
+                {/* Format Ether helps us in converting a BigNumber to string */}
+                You have minted {utils.formatEther(balanceOfCryptoDevTokens)} Crypto
+                Dev Tokens
             </div>
-            {walletConnected ? (
-                <div>
-                <div className={styles.description}>
-                    {/* Format Ether helps us in converting a BigNumber to string */}
-                    You have minted {utils.formatEther(balanceOfCryptoDevTokens)} Crypto
-                    Dev Tokens
-                </div>
-                <div className={styles.description}>
-                    {/* Format Ether helps us in converting a BigNumber to string */}
-                    Overall {utils.formatEther(tokensMinted)}/10000 have been minted!!!
-                </div>
-                {renderButton()}
-                </div>
+
+            <div className={styles.description}>
+                {/* Format Ether helps us in converting a BigNumber to string */}
+                Overall {utils.formatEther(tokensMinted)}/10000 have been minted!!!
+            </div>
+
+            {renderButton()}
+        </div>
             ) : (
                 <button onClick={connectWallet} className={styles.button}>
                 Connect your wallet
