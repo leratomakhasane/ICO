@@ -115,6 +115,32 @@ export default function Home() {
         }
     };
 
+    //help user claim Crypto Dev Tokens
+    const claimCryptoDevTokens = async () => {
+        try {
+            const signer = await getProviderOrSigner(true);
+            const tokenContract = new Contract(
+                TOKEN_CONTRACT_ADDRESS,
+                TOKEN_CONTRACT_ABI,
+                signer
+            );
+
+            const tx = await tokenContract.claim();
+            setLoading(true);
+
+            await tx.wait();
+            setLoading(false);
+
+            window.alert("Successfully claimed Crypto Dev Tokens");
+            await getBalanceOfCryptoDevTokens();
+            await getTotalTokensMinted();
+            await getTokensToBeClaimed();
+        }
+        catch(err) {
+            console.error(err);
+        }
+    };
+
     //retrieve how many tokens have been minted out of the total supply
     const getTotalTokensMinted = async () => {
         try {
@@ -180,7 +206,7 @@ export default function Home() {
     };
 
     const getProviderOrSigner = async (needSigner = false) => {
-        const provider = await web3ModalRef.current.account();
+        const provider = await web3ModalRef.current.connect();
         const web3Provider = new providers.Web3Provider(provider);
 
         const { chainId } = await web3Provider.getNetwork();
@@ -244,7 +270,7 @@ export default function Home() {
             return(
                 <div>
                     <div className={styles.description}>{tokensToBeClaimed * 10} Tokens can be claimed!</div>
-                    <button classnmae={styles.button} onClick={claimCryptoDevTokens}>Claim Tokens</button>
+                    <button className={styles.button} onClick={claimCryptoDevTokens}>Claim Tokens</button>
                 </div>
             );
         }
@@ -253,7 +279,7 @@ export default function Home() {
             <div style={ {display: "flex-col"} }>
                 <div>
                     <input type="number" placeholder="Amount of Tokens"
-                    onChange={ (e) => setTokenAmount(BigNumber.from(e.target.vallue))}
+                    onChange={ (e) => setTokenAmount(BigNumber.from(e.target.value))}
                     className={styles.input} />
                 </div>
 
